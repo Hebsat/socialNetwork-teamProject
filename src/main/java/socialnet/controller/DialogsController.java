@@ -34,7 +34,7 @@ public class DialogsController {
             @ApiResponse(responseCode = "403", description = "Forbidden")
     })
     @UpdateOnlineTime
-    public CommonRs<List<DialogRs>> dialogs() {
+    public CommonRs<List<DialogRs>> dialogs() throws Exception {
         return dialogsService.getAllDialogs();
     }
 
@@ -48,7 +48,7 @@ public class DialogsController {
             @ApiResponse(responseCode = "403", description = "Forbidden")
     })
     @UpdateOnlineTime
-    public CommonRs<ComplexRs> dialogsStart(@RequestBody DialogUserShortListDto dialogUserShortListDto) {
+    public CommonRs<ComplexRs> dialogsStart(@RequestBody DialogUserShortListDto dialogUserShortListDto) throws Exception {
         return dialogsService.beginDialog(dialogUserShortListDto);
     }
 

@@ -2,7 +2,7 @@ package socialnet.service;
 
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import socialnet.api.request.LikeRq;
-import socialnet.errors.NoSuchEntityException;
+import socialnet.errors.NotFoundException;
 import socialnet.model.entities.*;
 import socialnet.repository.CommentsRepository;
 import socialnet.repository.LikesRepository;
@@ -108,7 +108,7 @@ class LikesServiceTest {
     }
 
     @Test
-    void getLikesResponse() throws NoSuchEntityException {
+    void getLikesResponse() throws NotFoundException {
         Like like = new Like();
         like.setAuthor(person);
         likes.add(like);

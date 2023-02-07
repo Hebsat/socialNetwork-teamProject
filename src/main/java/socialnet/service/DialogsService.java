@@ -7,6 +7,7 @@ import socialnet.api.response.CommonRs;
 import socialnet.api.response.ComplexRs;
 import socialnet.api.response.DialogRs;
 import socialnet.api.response.MessageRs;
+import socialnet.errors.NotFoundException;
 import socialnet.mappers.DialogMapper;
 import socialnet.mappers.PersonMapper;
 import socialnet.model.entities.Dialog;
@@ -54,9 +55,9 @@ public class DialogsService {
         return new CommonRs<>(new ComplexRs(readCount[0]));
     }
 
-    public CommonRs<ComplexRs> beginDialog(DialogUserShortListDto dialogUserShortListDto) {
+    public CommonRs<ComplexRs> beginDialog(DialogUserShortListDto dialogUserShortListDto) throws Exception {
         Person currentPerson = personCacheService.getPersonByContext();
-        Person anotherPerson = personsRepository.findPersonById(dialogUserShortListDto.getUserIds().get(0)).orElseThrow();
+        Person anotherPerson = personsRepository.findPersonById(dialogUserShortListDto.getUserIds().get(0)).orElseThrow(new NotFoundException("Not such Person!"));
         if (dialogsRepository.findDialogByFirstPersonAndSecondPerson(anotherPerson, currentPerson).isEmpty() ||
                 (dialogsRepository.findDialogByFirstPersonAndSecondPerson(currentPerson, anotherPerson).isEmpty())) {
             createNewDialog(currentPerson, anotherPerson);
@@ -68,7 +69,7 @@ public class DialogsService {
         dialogsRepository.save(new Dialog(currentPerson, anotherPerson, ZonedDateTime.now()));
     }
 
-    public CommonRs<List<DialogRs>> getAllDialogs() {
+    public CommonRs<List<DialogRs>> getAllDialogs() throws Exception {
         List<DialogRs> dialogRsList = createDialogRsList(personCacheService.getPersonByContext());
         dialogRsList = blockDialogs(dialogRsList);
         return new CommonRs<>(dialogRsList, (long) dialogRsList.size());
@@ -81,7 +82,7 @@ public class DialogsService {
         return new CommonRs<>(messagesRs, (long) messagesRs.size());
     }
 
-    private List<DialogRs> createDialogRsList(Person person) {
+    private List<DialogRs> createDialogRsList(Person person) throws Exception {
         List<DialogRs> dialogRsList = new ArrayList<>();
         for (Dialog d : dialogsRepository.findAllByFirstPersonOrSecondPerson(person, person)) {
             dialogRsList.add(dialogMapper.toDialogRs(getLastMessageRs(d), d));
@@ -89,7 +90,7 @@ public class DialogsService {
         return dialogRsList;
     }
 
-    private MessageRs getLastMessageRs(Dialog dialog) {
+    private MessageRs getLastMessageRs(Dialog dialog) throws Exception {
         try {
             Message message = dialog.getLastMessage();
             return dialogMapper.toMessageRs(message, dialogMapService.getRecipientForLastMessage(message));
@@ -104,8 +105,8 @@ public class DialogsService {
         }
     }
 
-    public Person getRecipientFromDialog(Long authorId, Long dialogId) {
-        Dialog dialog = dialogsRepository.findById(dialogId).orElseThrow();
+    public Person getRecipientFromDialog(Long authorId, Long dialogId) throws Exception {
+        Dialog dialog = dialogsRepository.findById(dialogId).orElseThrow(new NotFoundException("No such Dialog!"));
         return !authorId.equals(dialog.getFirstPerson().getId()) ?
                 dialog.getFirstPerson() :
                 dialog.getSecondPerson();

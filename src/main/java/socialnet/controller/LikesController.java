@@ -13,7 +13,7 @@ import socialnet.api.request.LikeRq;
 import socialnet.api.response.CommonRs;
 import socialnet.api.response.ErrorRs;
 import socialnet.api.response.LikeRs;
-import socialnet.errors.NoSuchEntityException;
+import socialnet.errors.NotFoundException;
 import socialnet.service.LikesService;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +37,7 @@ public class LikesController {
     })
     public CommonRs<LikeRs> getLikesList(
             @RequestParam(name = "item_id") long itemId,
-            @RequestParam String type) throws NoSuchEntityException {
+            @RequestParam String type) throws NotFoundException {
 
         return likesService.getLikesResponse(itemId, type);
     }
@@ -53,7 +53,7 @@ public class LikesController {
             @ApiResponse(responseCode = "403", description = "Forbidden")
     })
     public CommonRs<LikeRs> putLike(
-            @RequestBody LikeRq likeRq) throws NoSuchEntityException {
+            @RequestBody LikeRq likeRq) throws NotFoundException {
 
         return likesService.putLike(likeRq);
     }
@@ -70,7 +70,7 @@ public class LikesController {
     })
     public CommonRs<LikeRs> deleteLike(
             @RequestParam(name = "item_id") long itemId,
-            @RequestParam String type) throws NoSuchEntityException {
+            @RequestParam String type) throws NotFoundException {
 
         return likesService.deleteLike(itemId, type);
     }

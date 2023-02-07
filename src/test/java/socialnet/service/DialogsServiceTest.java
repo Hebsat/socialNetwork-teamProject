@@ -115,7 +115,7 @@ class DialogsServiceTest {
     }
 
     @Test
-    void beginDialog() {
+    void beginDialog() throws Exception {
         when(personsRepository.findPersonById(any())).thenReturn(Optional.of(person2));
         when(dialogsRepository.findDialogByFirstPersonAndSecondPerson(person2, person1)).thenReturn(Optional.empty());
         when(dialogsRepository.findDialogByFirstPersonAndSecondPerson(person1, person2)).thenReturn(Optional.of(dialog1));
@@ -126,7 +126,7 @@ class DialogsServiceTest {
     }
 
     @Test
-    void getAllDialogs() {
+    void getAllDialogs() throws Exception {
         when(dialogsRepository.findAllByFirstPersonOrSecondPerson(person1, person1))
                 .thenReturn(dialogs.stream().filter(d -> d.getFirstPerson().equals(person1) || d.getSecondPerson().equals(person1)).collect(Collectors.toList()));
         assertEquals(1, dialogsService.getAllDialogs().getTotal());

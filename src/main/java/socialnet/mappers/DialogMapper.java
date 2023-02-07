@@ -37,12 +37,10 @@ public interface DialogMapper {
     @Mapping(target = "isDeleted", expression = "java(false)")
     MessageKafka toMessageKafkaFromMessageWs(MessageWs messageWs);
 
-    @Mapping(target = "author", source = "author")
-    @Mapping(target = "recipient", source = "recipient")
-    @Mapping(target = "dialog", source = "dialog")
-    @Mapping(target = "id", source = "kafka.id")
-    @Mapping(target = "isDeleted", source = "kafka.isDeleted")
-    Message toMessageFromKafka(MessageKafka kafka, Person author, Person recipient, Dialog dialog);
+    @Mapping(target = "author", source = "authorId")
+    @Mapping(target = "recipient", source = "recipientId")
+    @Mapping(target = "dialog", source = "dialogId")
+    Message toMessageFromKafka(MessageKafka kafka);
 
     default ZonedDateTime getTime(Long time) {
         return new Timestamp(time).toLocalDateTime().atZone(ZoneId.systemDefault());

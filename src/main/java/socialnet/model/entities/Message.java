@@ -55,18 +55,4 @@ public class Message implements Notificationed {
     public String getSimpleInfo() {
         return messageText;
     }
-
-    @Override
-    public String toString() {
-        return "Message{" +
-                "id=" + id +
-                ", time=" + time +
-                ", messageText='" + messageText + '\'' +
-                ", readStatus=" + readStatus +
-                ", isDeleted=" + isDeleted +
-                ", author=" + author +
-                ", recipient=" + recipient +
-                ", dialog=" + dialog +
-                '}';
-    }
 }

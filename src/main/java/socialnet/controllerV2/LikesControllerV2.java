@@ -13,7 +13,7 @@ import socialnet.aop.annotations.UpdateOnlineTime;
 import socialnet.api.response.CommonRs;
 import socialnet.api.response.ErrorRs;
 import socialnet.api.response.LikeRs;
-import socialnet.errors.NoSuchEntityException;
+import socialnet.errors.NotFoundException;
 import socialnet.service.LikesService;
 
 @RestController
@@ -36,7 +36,7 @@ public class LikesControllerV2 {
     })
     public CommonRs<LikeRs> getLikesList(
             @RequestParam(name = "item_id") long itemId,
-            @RequestParam String type) throws NoSuchEntityException {
+            @RequestParam String type) throws NotFoundException {
 
         return likesService.getLikesResponse(itemId, type);
     }
@@ -70,7 +70,7 @@ public class LikesControllerV2 {
     })
     public CommonRs<LikeRs> deleteLike(
             @RequestParam(name = "item_id") long itemId,
-            @RequestParam String type) throws NoSuchEntityException {
+            @RequestParam String type) throws NotFoundException {
 
         return likesService.deleteLike(itemId, type);
     }

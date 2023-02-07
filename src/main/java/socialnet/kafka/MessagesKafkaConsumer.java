@@ -16,7 +16,6 @@ import socialnet.repository.PersonsRepository;
 @Service
 @RequiredArgsConstructor
 public class MessagesKafkaConsumer {
-    private final PersonsRepository personsRepository;
 
     private final MessagesRepository messagesRepository;
     private final DialogsRepository dialogsRepository;
@@ -27,11 +26,7 @@ public class MessagesKafkaConsumer {
     public void consume(MessageKafka messageKafka) {
         log.info(String.format("Json received -> %s", messageKafka.toString()));
         Dialog dialog = dialogsRepository.findById(messageKafka.getDialogId()).orElseThrow();
-        Message message = dialogMapper.toMessageFromKafka(
-                messageKafka,
-                personsRepository.findPersonById(messageKafka.getAuthorId()).orElseThrow(),
-                personsRepository.findPersonById(messageKafka.getRecipientId()).orElseThrow(),
-                dialog);
+        Message message = dialogMapper.toMessageFromKafka(messageKafka);
         messagesRepository.save(message);
         dialog.setLastMessage(message);
         dialogsRepository.save(dialog);

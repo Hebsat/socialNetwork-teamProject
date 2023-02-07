@@ -2,9 +2,9 @@ package socialnet.errors;
 
 import java.util.function.Supplier;
 
-public class NoSuchEntityException extends Exception implements Supplier<Exception> {
+public class NotFoundException extends Exception implements Supplier<Exception> {
 
-    public NoSuchEntityException(String message) {
+    public NotFoundException(String message) {
         super(message);
     }
 

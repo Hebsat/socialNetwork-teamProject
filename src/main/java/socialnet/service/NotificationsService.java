@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import socialnet.api.response.CommonRs;
 import socialnet.api.response.NotificationRs;
 import socialnet.api.websocket.MessageWs;
-import socialnet.errors.NoSuchEntityException;
+import socialnet.errors.NotFoundException;
 import socialnet.errors.PersonNotFoundException;
 import socialnet.kafka.NotificationsKafkaProducer;
 import socialnet.mappers.NotificationMapper;
@@ -86,7 +86,7 @@ public class NotificationsService {
             });
         } else {
             Notification notification = notificationsRepository.findById(notificationId)
-                    .orElseThrow(new NoSuchEntityException("Notification with id " + notificationId + "was not found"));
+                    .orElseThrow(new NotFoundException("Notification with id " + notificationId + "was not found"));
             notification.setIsRead(true);
             notificationsKafkaProducer.sendMessage(notification);
         }
