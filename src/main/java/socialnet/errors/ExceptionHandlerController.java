@@ -13,7 +13,7 @@ public class ExceptionHandlerController {
 
     //400
     @ExceptionHandler({
-            NoSuchEntityException.class,
+            NotFoundException.class,
             EmptyFieldException.class,
             BadCredentialsException.class,
             PasswordException.class,

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import socialnet.api.request.LikeRq;
 import socialnet.api.response.CommonRs;
 import socialnet.api.response.LikeRs;
-import socialnet.errors.NoSuchEntityException;
+import socialnet.errors.NotFoundException;
 import socialnet.kafka.NotificationsKafkaProducer;
 import socialnet.model.entities.Like;
 import socialnet.model.entities.Person;
@@ -35,11 +35,11 @@ public class LikesService {
     @Value("${socialNetwork.timezone}")
     private String timezone;
 
-    public CommonRs<LikeRs> putLike(LikeRq likeRq) throws NoSuchEntityException {
+    public CommonRs<LikeRs> putLike(LikeRq likeRq) throws NotFoundException {
         Person person = personCacheService.getPersonByContext();
         Liked liked = getLikedEntity(likeRq.getItemId(), likeRq.getType());
         if (getLikeFromCurrentPerson(person, liked) != null) {
-            throw new NoSuchEntityException("Like is already exists");
+            throw new NotFoundException("Like is already exists");
         }
         Like like = new Like();
         like.setEntity(liked);
@@ -64,11 +64,11 @@ public class LikesService {
         return buildCommonResponse(likeRs);
     }
 
-    public CommonRs<LikeRs> getLikesResponse(long entityId, String type) throws NoSuchEntityException {
+    public CommonRs<LikeRs> getLikesResponse(long entityId, String type) throws NotFoundException {
         return getLikesResponse(getLikedEntity(entityId, type));
     }
 
-    public CommonRs<LikeRs> deleteLike(long entityId, String type) throws NoSuchEntityException {
+    public CommonRs<LikeRs> deleteLike(long entityId, String type) throws NotFoundException {
         Person person = personCacheService.getPersonByContext();
         Liked liked = getLikedEntity(entityId, type);
         Like like = getLikeFromCurrentPerson(person, liked);
@@ -83,7 +83,7 @@ public class LikesService {
         return likesRepository.findLikeByPersonAndEntity(liked.getType(), liked, person).orElse(null);
     }
 
-    private Liked getLikedEntity(long entityId, String type) throws NoSuchEntityException {
+    private Liked getLikedEntity(long entityId, String type) throws NotFoundException {
         Liked liked;
         switch (type) {
             case "Post" : {
@@ -94,7 +94,7 @@ public class LikesService {
                 liked = commentsRepository.findById(entityId).orElseThrow();
                 break;
             }
-            default: throw new NoSuchEntityException(type + " with id " + entityId + " not found!");
+            default: throw new NotFoundException(type + " with id " + entityId + " not found!");
         }
         return liked;
     }

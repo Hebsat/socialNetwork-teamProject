@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import socialnet.api.websocket.MessageCommonWs;
 import socialnet.api.websocket.MessageTypingWs;
 import socialnet.api.websocket.MessageWs;
-import socialnet.errors.NoSuchEntityException;
+import socialnet.errors.NotFoundException;
 import socialnet.kafka.MessagesKafkaProducer;
 import socialnet.model.entities.Dialog;
 import socialnet.model.entities.Message;
@@ -26,7 +26,7 @@ public class MessageWsService {
     private final MessagesRepository messagesRepository;
     private final DialogsRepository dialogsRepository;
 
-    public void postMessage(MessageWs messageWs) {
+    public void postMessage(MessageWs messageWs) throws Exception {
         Long id = messageWs.getDialogId() + messageWs.getAuthorId() + System.currentTimeMillis();
         Long recipientId = dialogsService.getRecipientFromDialog(messageWs.getAuthorId(), messageWs.getDialogId()).getId();
         messageWs.setId(id);
@@ -89,7 +89,7 @@ public class MessageWsService {
     }
 
     private Message getMessage(MessageCommonWs messageCommonWs) throws Exception {
-        return messagesRepository.findById(messageCommonWs.getMessageId()).orElseThrow(new NoSuchEntityException("Message not found!"));
+        return messagesRepository.findById(messageCommonWs.getMessageId()).orElseThrow(new NotFoundException("Message not found!"));
     }
 
     private Message getLastMessage(Long dialogId) {
@@ -99,6 +99,6 @@ public class MessageWsService {
     }
 
     private Dialog getDialog(MessageCommonWs messages) throws Exception {
-        return dialogsRepository.findById(messages.getDialogId()).orElseThrow(new NoSuchEntityException("Dialog not found!"));
+        return dialogsRepository.findById(messages.getDialogId()).orElseThrow(new NotFoundException("Dialog not found!"));
     }
 }

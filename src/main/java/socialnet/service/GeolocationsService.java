@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import socialnet.api.response.GeolocationRs;
 import socialnet.api.response.CommonRs;
-import socialnet.errors.NoSuchEntityException;
+import socialnet.errors.NotFoundException;
 import socialnet.model.entities.City;
 import socialnet.model.entities.Country;
 import socialnet.repository.CitiesRepository;
@@ -46,7 +46,7 @@ public class GeolocationsService {
     public void setCityGismeteoId(String cityName) throws Exception {
         List<String> cityFields = getCityFields(cityName);
         City city = citiesRepository.findCityByNameAndDistrictAndSubDistrict(cityFields.get(0), cityFields.get(1), cityFields.get(2))
-                .orElseThrow(new NoSuchEntityException("City with " + cityName + " name was not found"));
+                .orElseThrow(new NotFoundException("City with " + cityName + " name was not found"));
         if (city.getGismeteoId() == null) {
             city.setGismeteoId(weatherService.getGismeteoCityId(city));
             if (city.getGismeteoId() != null) {
@@ -88,7 +88,7 @@ public class GeolocationsService {
     public CommonRs<List<GeolocationRs>> getCitiesByCountryFromUsers(String countryName) throws Exception {
         List<String> citiesNames = personsRepository.getCitiesByCountry(countryName);
         Country country = countriesRepository.findCountryByName(countryName)
-                .orElseThrow(new NoSuchEntityException("Country with " + countryName + " name was not found"));
+                .orElseThrow(new NotFoundException("Country with " + countryName + " name was not found"));
         List<City> cities = new ArrayList<>();
         country.getCities().forEach(city -> {
             if (citiesNames.stream().anyMatch(name -> name.equals(getCityFullName(city)))) {
@@ -102,14 +102,14 @@ public class GeolocationsService {
         startsWith = startsWith.isEmpty() ?
                 startsWith : startsWith.substring(0, 1).toUpperCase() + startsWith.substring(1);
         Country country = countriesRepository.findCountryByName(countryName)
-                .orElseThrow(new NoSuchEntityException("Country with " + countryName + " name was not found"));
+                .orElseThrow(new NotFoundException("Country with " + countryName + " name was not found"));
         List<City> cities = citiesRepository.findCitiesByCountryAndNameStartsWith(country, startsWith);
         return getResponse(cities.stream().map(this::getCityFullName).collect(Collectors.toList()), firstCitiesInResponse);
     }
 
     public CommonRs<List<GeolocationRs>> getAllCitiesByCountryStartsWithFromApi(String countryName, String startsWith) throws Exception {
         Country country = countriesRepository.findCountryByName(countryName)
-                .orElseThrow(new NoSuchEntityException("Country with " + countryName + " name was not found"));
+                .orElseThrow(new NotFoundException("Country with " + countryName + " name was not found"));
         List<GeolocationRs> response = new ArrayList<>();
         try (InputStream stream = new URL(citiesPath1 + startsWith + citiesPath2 + token).openStream()) {
             String jsonData = new String(stream.readAllBytes());

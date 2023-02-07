@@ -15,7 +15,7 @@ public class MessageWsController {
     private final MessageWsService messageWsService;
 
     @MessageMapping("/dialogs/send_message")
-    public void sendMessage(@Payload MessageWs messageWs) {
+    public void sendMessage(@Payload MessageWs messageWs) throws Exception {
         messageWsService.postMessage(messageWs);
     }
 
