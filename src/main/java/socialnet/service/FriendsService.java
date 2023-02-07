@@ -1,5 +1,4 @@
 package socialnet.service;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -79,8 +78,8 @@ public class FriendsService {
 
     public CommonRs<List<PersonRs>> getFriends(Integer offset, Integer size) {
         Person srcPerson = personCacheService.getPersonByContext();
-        Page<Person> requestedPersons = getPersons(srcPerson, offset, size, FriendshipStatusTypes.FRIEND);
-        return buildCommonResponse(requestedPersons, srcPerson, offset);
+        Page<Person> friends = getPersons(srcPerson, offset, size, FriendshipStatusTypes.FRIEND);
+        return buildCommonResponse(friends, srcPerson, offset);
     }
 
     public CommonRs<List<PersonRs>> getRequestedPersons(Integer offset, Integer size) throws Exception {
@@ -108,12 +107,12 @@ public class FriendsService {
     public void userBlocksUser(Long blockId) throws Exception {
         Person srcPerson = personCacheService.getPersonByContext();
         Person dstPerson = getDstPerson(blockId);
-        Optional<Friendship> meOptionalSrcFriendship = friendshipsRepository.findFriendshipBySrcPersonIdAndDstPersonId(srcPerson.getId(), blockId);
-        Optional<Friendship> meDstFriendship = friendshipsRepository.findFriendshipBySrcPersonIdAndDstPersonId(blockId, srcPerson.getId());
-        if (meOptionalSrcFriendship.isPresent() && meOptionalSrcFriendship.get().getFriendshipStatus().equals(BLOCKED)) {
-            unblockPerson(meOptionalSrcFriendship.get());
+        Optional<Friendship> optionalSrcFriendship = friendshipsRepository.findFriendshipBySrcPersonIdAndDstPersonId(srcPerson.getId(), blockId);
+        Optional<Friendship> optionalDstFriendship = friendshipsRepository.findFriendshipBySrcPersonIdAndDstPersonId(blockId, srcPerson.getId());
+        if (optionalSrcFriendship.isPresent() && optionalSrcFriendship.get().getFriendshipStatus().equals(BLOCKED)) {
+            unblockPerson(optionalSrcFriendship.get());
         } else {
-            blockPerson(meDstFriendship, meOptionalSrcFriendship, srcPerson, dstPerson);
+            blockPerson(optionalDstFriendship, optionalSrcFriendship, srcPerson, dstPerson);
         }
     }
 
@@ -189,13 +188,13 @@ public class FriendsService {
         friendshipsRepository.delete(meSrcFriendship);
     }
 
-    public void blockPerson(Optional<Friendship> meOptionalDstFriendship, Optional<Friendship> meOptionalSrcFriendship, Person srcPerson, Person dstPerson) throws Exception {
-        if (meOptionalDstFriendship.isEmpty()) {
+    private void blockPerson(Optional<Friendship> optionalDstFriendship, Optional<Friendship> optionalSrcFriendship, Person srcPerson, Person dstPerson)  {
+        if (optionalDstFriendship.isEmpty()) {
             friendshipsRepository.save(new Friendship(LocalDateTime.now(), srcPerson, dstPerson, BLOCKED));
         } else {
-            Friendship srcFriendship = meOptionalSrcFriendship.orElseThrow();
-            if (meOptionalDstFriendship.get().getFriendshipStatus() != BLOCKED) {
-                friendshipsRepository.delete(meOptionalDstFriendship.get());
+            Friendship srcFriendship = optionalSrcFriendship.orElseThrow();
+            if (optionalDstFriendship.get().getFriendshipStatus() != BLOCKED) {
+                friendshipsRepository.delete(optionalDstFriendship.get());
             }
             srcFriendship.setFriendshipStatus(BLOCKED);
             srcFriendship.setSentTime(LocalDateTime.now());

@@ -1,5 +1,6 @@
 package socialnet.service;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import org.checkerframework.checker.units.qual.A;
 import socialnet.api.response.CommonRs;
 import socialnet.api.response.PersonRs;
 import socialnet.kafka.NotificationsKafkaProducer;
@@ -76,6 +77,7 @@ class FriendsServiceTest {
 
     private final static PersonRs C_FRIEND_DTO = PersonRs.builder().id(2L).email(C_FRIEND_MAIL).build();
     private final static PersonRs RECEIVED_FRIEND_DTO = PersonRs.builder().id(3L).email(RECEIVED_FRIEND_MAIL).build();
+    private final static PersonRs REQUESTED_FRIEND_DTO = PersonRs.builder().id(4L).email(REQUESTED_FRIEND_MAIL).build();
 
     private static final LocalDateTime TIME = LocalDateTime.now();
     private static final Integer OFFSET = 0;
@@ -84,7 +86,9 @@ class FriendsServiceTest {
     private static final ArrayList<Person> FRIENDS = new ArrayList<>(Arrays.asList(C_FRIEND));
     private static final Page<Person> PAGE_FRIENDS = new PageImpl<>(FRIENDS, PAGEABLE, FRIENDS.size());
     private static final ArrayList<Person> RECEIVED_FRIENDS = new ArrayList<>(Arrays.asList(RECEIVED_FRIEND));
+    private static final ArrayList<Person> REQUESTED_FRIENDS = new ArrayList<>(Arrays.asList(REQUESTED_FRIEND));
     private static final Page<Person> PAGE_RECEIVED_FRIENDS = new PageImpl<>(RECEIVED_FRIENDS, PAGEABLE, RECEIVED_FRIENDS.size());
+    private static final Page<Person> PAGE_REQUESTED_FRIENDS = new PageImpl<>(REQUESTED_FRIENDS, PAGEABLE, REQUESTED_FRIENDS.size());
 
     private PersonSettings personSettings;
 
@@ -100,7 +104,6 @@ class FriendsServiceTest {
         personSettings = new PersonSettings();
         personSettings.setFriendRequestNotification(true);
         REQUESTED_FRIEND.setPersonSettings(personSettings);
-
     }
 
     private void mockSecurityContext(){
@@ -136,6 +139,7 @@ class FriendsServiceTest {
         when(personsRepository.findPersonById(UNKNOWN_PERSON.getId())).thenReturn(Optional.of(UNKNOWN_PERSON));
         when(personsRepository.findPersonByIdIn(List.of(C_FRIEND.getId()), PAGEABLE)).thenReturn(PAGE_FRIENDS);
         when(personsRepository.findPersonByIdIn(List.of(RECEIVED_FRIEND.getId()), PAGEABLE)).thenReturn(PAGE_RECEIVED_FRIENDS);
+        when(personsRepository.findPersonByIdIn(List.of(REQUESTED_FRIEND.getId()), PAGEABLE)).thenReturn(PAGE_REQUESTED_FRIENDS);
     }
 
     private void mockFriendshipsRepository() {
@@ -147,6 +151,9 @@ class FriendsServiceTest {
         when(friendshipsRepository.findFriendshipBySrcPersonAndDstPerson(C_FRIEND, CURRENT_PERSON)).thenReturn(Optional.of(fsCurPsFr));
         when(friendshipsRepository.findFriendshipBySrcPersonAndDstPerson(CURRENT_PERSON,C_FRIEND)).thenReturn(Optional.of(fsCurPsFr));
 
+        when(friendshipsRepository.findFriendshipBySrcPersonIdAndDstPersonId(C_FRIEND.getId(), CURRENT_PERSON.getId())).thenReturn(Optional.of(fsCurPsFr));
+        when(friendshipsRepository.findFriendshipBySrcPersonIdAndDstPersonId(CURRENT_PERSON.getId(), C_FRIEND.getId())).thenReturn(Optional.of(fsCurPsFr));
+
         when(friendshipsRepository.findFriendshipBySrcPersonAndDstPerson(CURRENT_PERSON, RECEIVED_FRIEND)).thenReturn(Optional.of(fsCurPsRcFr));
         when(friendshipsRepository.findFriendshipBySrcPersonAndDstPerson(RECEIVED_FRIEND, CURRENT_PERSON)).thenReturn(Optional.of(fsRcFr));
 
@@ -157,6 +164,24 @@ class FriendsServiceTest {
     private void mockPersonMapper() {
         when(personMapper.toPersonResponse(C_FRIEND)).thenReturn(C_FRIEND_DTO);
         when(personMapper.toPersonResponse(RECEIVED_FRIEND)).thenReturn(RECEIVED_FRIEND_DTO);
+        when(personMapper.toPersonResponse(REQUESTED_FRIEND)).thenReturn(REQUESTED_FRIEND_DTO);
+    }
+
+    @Test
+    void getOutgoingRequest(){
+        CommonRs<List<PersonRs>> resFriends = friendsService.getOutgoingRequests(OFFSET, SIZE);
+        PersonRs resDto = resFriends.getData().get(0);
+        assertEquals(REQUESTED_FRIENDS.size(), resFriends.getData().size());
+        assertEquals(REQUESTED_FRIEND.getId(), resDto.getId());
+        assertEquals(REQUESTED_FRIEND.getEmail(), resDto.getEmail());
+    }
+
+    @Test
+    void userBlockUser() throws Exception {
+        friendsService.userBlocksUser(C_FRIEND.getId());
+        verify(friendshipsRepository, times(1)).delete(any());
+        verify(friendshipsRepository, times(1)).save(any());
+        assertEquals(BLOCKED, fsCurPsFr.getFriendshipStatus());
     }
 
     @Test
@@ -186,7 +211,7 @@ class FriendsServiceTest {
     }
 
     @Test
-    void getFriends() throws Exception {
+    void getFriends()  {
         CommonRs<List<PersonRs>> resFriends = friendsService.getFriends(OFFSET, SIZE);
         PersonRs resDto = resFriends.getData().get(0);
         assertEquals(FRIENDS.size(), resFriends.getData().size());
