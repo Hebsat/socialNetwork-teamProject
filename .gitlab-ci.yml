@@ -14,7 +14,7 @@ deploy-job:
   script:
     - (docker ps -a --format {{.Names}} | grep social -w) && docker stop social && docker rm social || echo "Doesn't exist"
     - docker build -t java-backend:1.0 .
-    - docker run --name=social -d -p 8086:8086 -t java-backend:1.0 date
+    - docker run --name=social -d -p 8086:8086 -it java-backend:1.0
     - docker system prune -a
   only:
     - dev
