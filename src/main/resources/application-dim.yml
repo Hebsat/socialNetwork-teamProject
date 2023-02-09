@@ -7,8 +7,14 @@ spring:
     username: postgres
     password: 123
   kafka:
+    bootstrap-servers: localhost:9092
     consumer:
       group-id: dimGroup
+  redis:
+    port: 6379
+    host: localhost
+    database: 0
+    password: 000000
 
 auth:
   pass-restore: http://localhost:8080/change-password?token=

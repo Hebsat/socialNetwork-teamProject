@@ -25,7 +25,7 @@ public class CaptchaService {
         CaptchaRs captchaResponse = new CaptchaRs();
         Cage cage = new GCage();
         String secret = UUID.randomUUID().toString();
-        String code = cage.getTokenGenerator().next();
+        String code = cage.getTokenGenerator().next().substring(0, 4);
         String image = "data:image/png;base64, " + Base64.getEncoder().encodeToString(cage.draw(code));
         Captcha captcha = new Captcha();
         captcha.setCode(code);

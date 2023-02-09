@@ -11,7 +11,6 @@ import socialnet.model.enums.ReadStatusTypes;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface MessagesRepository extends JpaRepository<Message, Long> {
@@ -21,15 +20,12 @@ public interface MessagesRepository extends JpaRepository<Message, Long> {
             nativeQuery = true)
     void messagesDelete(@Param("id") long id);
 
-    Optional<Message> findMessageByAuthorIdAndRecipientIdAndTime(Long authorId, Long recipientId, ZonedDateTime zonedDateTime);
     List<Message> findAllByRecipientAndIsDeletedFalse(Person recipient);
     List<Message> findAllByRecipientAndReadStatusAndIsDeletedFalse(Person person, ReadStatusTypes status);
     List<Message> findAllByDialogIdAndRecipientAndReadStatusAndIsDeletedFalse(Long dialogId, Person person, ReadStatusTypes status);
 
     List<Message> findAllByDialogIdAndIsDeletedFalseOrderByTimeAsc(Long dialogId);
     List<Message> findAllByDialogIdAndIsDeletedFalse(Long dialogId);
-    @Transactional
-    void deleteAllByDialogIdAndAuthorIdAndIsDeletedTrue(Long dialogId, Long authorId);
     Long countAllByDialogId(long id);
     Long countAllByAuthorIdAndRecipientId(long authorId, long recipientId);
 

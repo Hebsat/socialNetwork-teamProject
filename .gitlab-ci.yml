@@ -18,6 +18,7 @@ deploy-job:
     - docker system prune -a
   only:
     - dev
+
 sonarqube-check:
   image: maven:3.6.3-jdk-11
   variables:
