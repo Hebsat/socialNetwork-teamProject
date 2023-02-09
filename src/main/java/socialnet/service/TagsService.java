@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,12 +19,15 @@ public class TagsService {
     private final TagsRepository tagRepository;
 
     private Tag createTag(String tagName) {
-        return tagRepository.save(new Tag(tagName.replaceAll("[\\W]+", "")));
+        Tag tag = new Tag(tagName.replaceAll("[^ёЁа-яА-Яa-zA-Z_0-9-]+", ""));
+        if (tag.getTagName().isEmpty()) {
+            return null;
+        }
+        return tagRepository.save(tag);
     }
 
     private Tag getTagByTagName(String tagName) {
-        Tag tag = tagRepository.findByTagName(tagName);
-        return tag == null ? createTag(tagName) : tag;
+        return tagRepository.findByTagName(tagName).orElseGet(() -> createTag(tagName));
     }
 
     @Named("getTagsByStrings")
@@ -31,7 +35,7 @@ public class TagsService {
         if (tags == null) {
             return new ArrayList<>();
         }
-        return tags.stream().map(this::getTagByTagName).collect(Collectors.toList());
+        return tags.stream().map(this::getTagByTagName).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     @Named("getStringsByTags")

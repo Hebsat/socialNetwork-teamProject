@@ -8,7 +8,6 @@ import socialnet.api.response.MessageRs;
 import socialnet.kafka.dto.MessageKafka;
 import socialnet.model.entities.Dialog;
 import socialnet.model.entities.Message;
-import socialnet.model.entities.Person;
 import socialnet.model.enums.ReadStatusTypes;
 import socialnet.repository.DialogsRepository;
 import socialnet.repository.PersonsRepository;
@@ -24,15 +23,14 @@ public interface DialogMapper {
     @Mapping(target = "id", source = "dialog.id")
     @Mapping(target = "lastMessage", source = "messageRs")
     @Mapping(target = "unreadCount", source = "dialog", qualifiedByName = "getUnreadMessagesCountForDialog")
-    DialogRs toDialogRs(MessageRs messageRs, Dialog dialog);
+    DialogRs toDialogRs(Dialog dialog, MessageRs messageRs);
 
     @Mapping(target = "isSentByMe", source="message", qualifiedByName = "isAuthor")
-    @Mapping(target = "recipient", source = "person")
-    @Mapping(target = "recipientId", source="message.recipient.id")
-    @Mapping(target = "authorId", source = "message.author.id")
-    @Mapping(target = "readStatus", expression = "java(message.getReadStatus().name())")
     @Mapping(target = "id", source = "message.id")
-    MessageRs toMessageRs(Message message, Person person);
+    @Mapping(target = "authorId", source = "message.author.id")
+    @Mapping(target = "recipientId", source = "message.recipient.id")
+    @Mapping(target = "recipient", source = "message.recipient")
+    MessageRs toMessageRs(Message message);
 
     @Mapping(target = "isDeleted", expression = "java(false)")
     MessageKafka toMessageKafkaFromMessageWs(MessageWs messageWs);
@@ -48,5 +46,9 @@ public interface DialogMapper {
 
     default ReadStatusTypes getReadStatus(String readStatus) {
         return ReadStatusTypes.valueOf(readStatus);
+    }
+
+    default String getReadStatus(ReadStatusTypes readStatus) {
+        return readStatus == null ? ReadStatusTypes.SENT.name() : readStatus.name();
     }
 }

@@ -9,7 +9,6 @@ import socialnet.api.response.DialogRs;
 import socialnet.api.response.MessageRs;
 import socialnet.errors.NotFoundException;
 import socialnet.mappers.DialogMapper;
-import socialnet.mappers.PersonMapper;
 import socialnet.model.entities.Dialog;
 import socialnet.model.entities.Friendship;
 import socialnet.model.entities.Message;
@@ -35,7 +34,6 @@ public class DialogsService {
     private final PersonsRepository personsRepository;
     private final DialogMapper dialogMapper;
     private final DialogMapService dialogMapService;
-    private final PersonMapper personMapper;
     private final PersonCacheService personCacheService;
 
     public CommonRs<ComplexRs> getUnreadMessages() {
@@ -78,30 +76,33 @@ public class DialogsService {
     public CommonRs<List<MessageRs>> getMessages(Long dialogId) {
         List<MessageRs> messagesRs = new ArrayList<>();
         messagesRepository.findAllByDialogIdAndIsDeletedFalseOrderByTimeAsc(dialogId)
-                .forEach(m -> messagesRs.add(dialogMapper.toMessageRs(m, dialogMapService.getRecipientForLastMessage(m))));
+                .forEach(m -> messagesRs.add(dialogMapper.toMessageRs(m)));
         return new CommonRs<>(messagesRs, (long) messagesRs.size());
+    }
+
+    private Person getRecipientForLastMessage(Message message) {
+        return dialogMapService.isAuthor(message) ? message.getRecipient() : message.getAuthor();
     }
 
     private List<DialogRs> createDialogRsList(Person person) throws Exception {
         List<DialogRs> dialogRsList = new ArrayList<>();
         for (Dialog d : dialogsRepository.findAllByFirstPersonOrSecondPerson(person, person)) {
-            dialogRsList.add(dialogMapper.toDialogRs(getLastMessageRs(d), d));
+            checkLastMessageRs(d);
+            Message message = d.getLastMessage();
+            message.setRecipient(getRecipientForLastMessage(message));
+            dialogRsList.add(dialogMapper.toDialogRs(d, dialogMapper.toMessageRs(message)));
         }
         return dialogRsList;
     }
 
-    private MessageRs getLastMessageRs(Dialog dialog) throws Exception {
-        try {
-            Message message = dialog.getLastMessage();
-            return dialogMapper.toMessageRs(message, dialogMapService.getRecipientForLastMessage(message));
-        } catch (Exception e) {
+    private void checkLastMessageRs(Dialog dialog) throws Exception {
+        if (dialog.getLastMessage() == null) {
             Person currentPerson = personCacheService.getPersonByContext();
             Person anotherPerson = getRecipientFromDialog(currentPerson.getId(), dialog.getId());
-            return MessageRs.builder()
-                    .authorId(currentPerson.getId())
-                    .recipientId(anotherPerson.getId())
-                    .recipient(personMapper.toPersonResponse(anotherPerson))
-                    .build();
+            dialog.setLastMessage(Message.builder()
+                    .author(currentPerson)
+                    .recipient(anotherPerson)
+                    .build());
         }
     }
 

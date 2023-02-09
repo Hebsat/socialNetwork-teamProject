@@ -47,6 +47,7 @@ public class WeatherService {
             connection.addRequestProperty(header, token);
             String jsonData = new String(connection.getInputStream().readAllBytes());
             JSONArray citiesItems = new JSONObject(jsonData).getJSONObject("response").getJSONArray("items");
+            log.info("Got JSON from GisMeteo API: " + jsonData);
             for (int i = 0; i < citiesItems.length(); i++) {
                 JSONObject currentCity = citiesItems.getJSONObject(i);
                 if (!currentCity.getJSONObject("country").getString("code")
@@ -60,7 +61,9 @@ public class WeatherService {
                 }
                 cityId = currentCity.getInt("id");
             }
-        } catch (IOException ignored) {}
+        } catch (IOException e) {
+            log.error("Error getting GismeteoId: " + e.getMessage());
+        }
         return cityId;
     }
 
