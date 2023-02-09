@@ -82,7 +82,6 @@ public class MessageWsService {
 
     public void closeDialog(MessageCommonWs messageCommonWs) throws Exception {
         Dialog dialog = getDialog(messageCommonWs);
-        messagesRepository.deleteAllByDialogIdAndAuthorIdAndIsDeletedTrue(messageCommonWs.getDialogId(), messageCommonWs.getUserId());
         if (dialog.getLastMessage() == null) {
             dialogsRepository.delete(dialog);
         }
