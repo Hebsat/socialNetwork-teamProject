@@ -103,6 +103,8 @@ logging:
     path: log
     uploadLogs: true
     uploadTime: 0 0 4 * * *
+  level:
+    root: debug
 
 yandex:
   OAuth: y0_AgAAAABmXrQEAAixEgAAAADUt4an1A5J737iQj-h8tddar39fPxBIgQ
