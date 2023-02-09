@@ -32,6 +32,8 @@ auth:
 logging:
   file:
     uploadLogs: false
+  level:
+    root: info
 
 
 

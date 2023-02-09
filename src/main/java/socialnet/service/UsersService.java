@@ -15,6 +15,7 @@ import socialnet.api.response.*;
 import socialnet.errors.EmptyFieldException;
 import socialnet.errors.FileException;
 import socialnet.mappers.PersonMapper;
+import socialnet.model.entities.City;
 import socialnet.model.entities.Person;
 import socialnet.repository.*;
 import socialnet.service.search.SearchPersons;
@@ -48,6 +49,7 @@ public class UsersService {
     private final PostsRepository postsRepository;
     private final PersonsRepository personsRepository;
     private final PersonSettingsRepository personSettingsRepository;
+    private final CountriesRepository countriesRepository;
     private final CloudinaryService cloudinaryService;
     private final GeolocationsService geolocationsService;
     private final PersonMapper personMapper;
@@ -99,6 +101,9 @@ public class UsersService {
     public CommonRs<PersonRs> editProfile(UserRq userRq) throws Exception {
         Person person = personCacheService.getPersonByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         PersonRs personRs = personMapper.toPersonResponse(person);
+        if (userRq.getCity() != null && userRq.getCountry() == null) {
+            throw new EmptyFieldException("Не указана страна");
+        }
         if (userRq.getAbout() != null) {
             person.setAbout(userRq.getAbout());
             personRs.setAbout(userRq.getAbout());
@@ -107,15 +112,13 @@ public class UsersService {
             person.setBirthDate(LocalDateTime.from(OffsetDateTime.parse(userRq.getBirth_date())));
             personRs.setBirthDate(LocalDateTime.from(OffsetDateTime.parse(userRq.getBirth_date())));
         }
+        person.setCity(userRq.getCity());
+        personRs.setCity(userRq.getCity());
         if (userRq.getCity() != null) {
-            person.setCity(userRq.getCity());
-            personRs.setCity(userRq.getCity());
             geolocationsService.setCityGismeteoId(userRq.getCity());
         }
-        if (userRq.getCountry() != null) {
-            person.setCountry(userRq.getCountry());
-            personRs.setCountry(userRq.getCountry());
-        }
+        person.setCountry(userRq.getCountry());
+        personRs.setCountry(userRq.getCountry());
         if (userRq.getFirst_name() != null) {
             person.setFirstName(userRq.getFirst_name());
             personRs.setFirstName(userRq.getFirst_name());
