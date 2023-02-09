@@ -184,9 +184,6 @@
         <!--            <version>1.5.3.Final</version>-->
         <!--        </dependency>-->
     </dependencies>
-    <!--    <profiles>-->
-    <!--    <profile>-->
-    <!--    <id>coverage</id>-->
     <build>
         <plugins>
             <plugin>
@@ -224,25 +221,6 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.8</version>
-                <!--                <executions>-->
-                <!--                    <execution>-->
-                <!--                        <id>prepare-agent</id>-->
-                <!--                        <goals>-->
-                <!--                            <goal>prepare-agent</goal>-->
-                <!--                        </goals>-->
-                <!--                    </execution>-->
-                <!--                    <execution>-->
-                <!--                        <id>report</id>-->
-                <!--                        <goals>-->
-                <!--                            <goal>report</goal>-->
-                <!--                        </goals>-->
-                <!--                        <configuration>-->
-                <!--                            <formats>-->
-                <!--                                <format>XML</format>-->
-                <!--                            </formats>-->
-                <!--                        </configuration>-->
-                <!--                    </execution>-->
-                <!--                </executions>-->
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -253,20 +231,4 @@
             </plugin>
         </plugins>
     </build>
-    <!--    </profile>-->
-
-    <profiles>
-        <profile>
-            <id>sonar</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <sonar.host.url>
-                    http://localhost:9000
-                </sonar.host.url>
-                <sonar.tests/>
-            </properties>
-        </profile>
-    </profiles>
 </project>
