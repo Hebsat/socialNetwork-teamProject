@@ -74,7 +74,7 @@ public class MessageWsService {
         messagingTemplate.convertAndSendToUser(messageCommonWs.getDialogId().toString(), "/queue/messages", messageCommonWs);
         message.setIsDeleted(false);
         messagesRepository.save(message);
-        if (dialog.getLastMessage() == null) {
+        if (dialog.getLastMessage() == null || message.getTime().isAfter(dialog.getLastMessage().getTime())) {
             dialog.setLastMessage(message);
             dialogsRepository.save(dialog);
         }
@@ -91,6 +91,7 @@ public class MessageWsService {
     private Message getMessage(MessageCommonWs messageCommonWs) throws Exception {
         return messagesRepository.findById(messageCommonWs.getMessageId()).orElseThrow(new NotFoundException("Message not found!"));
     }
+
 
     private Message getLastMessage(Long dialogId) {
         return messagesRepository.findAllByDialogIdAndIsDeletedFalse(dialogId)

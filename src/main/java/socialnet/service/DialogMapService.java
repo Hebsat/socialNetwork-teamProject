@@ -5,7 +5,6 @@ import org.mapstruct.Named;
 import org.springframework.stereotype.Service;
 import socialnet.model.entities.Dialog;
 import socialnet.model.entities.Message;
-import socialnet.model.entities.Person;
 import socialnet.model.enums.ReadStatusTypes;
 import socialnet.repository.MessagesRepository;
 
@@ -27,9 +26,5 @@ public class DialogMapService {
     @Named("isAuthor")
     public Boolean isAuthor(Message message) {
         return message.getAuthor().getId().equals(personCacheService.getPersonByContext().getId());
-    }
-
-    public Person getRecipientForLastMessage(Message message) {
-        return isAuthor(message) ? message.getRecipient() : message.getAuthor();
     }
 }
