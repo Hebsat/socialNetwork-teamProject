@@ -24,10 +24,10 @@ public class Message implements Notificationed {
     @Column(nullable = false)
     private ZonedDateTime time;
 
-    @Column(name = "message_text", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "message_text", columnDefinition = "TEXT")
     private String messageText;
 
-    @Column(name = "read_status", nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'SENT'")
+    @Column(name = "read_status", columnDefinition = "VARCHAR(255) DEFAULT 'SENT'")
     @Enumerated(EnumType.STRING)
     private ReadStatusTypes readStatus;
 
