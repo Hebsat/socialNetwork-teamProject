@@ -113,6 +113,7 @@ public class GeolocationsService {
         List<GeolocationRs> response = new ArrayList<>();
         try (InputStream stream = new URL(citiesPath1 + startsWith + citiesPath2 + token).openStream()) {
             String jsonData = new String(stream.readAllBytes());
+            log.info("Got cities from API: " + jsonData);
             Set<String> jsonSet = new JSONObject(jsonData).keySet();
             jsonSet.forEach(key -> {
                 if (key.matches("\\D+")){
@@ -136,7 +137,9 @@ public class GeolocationsService {
                             .build());
                 }
             });
-        } catch (IOException ignored) {}
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
         return CommonRs.<List<GeolocationRs>>builder().total((long) response.size()).data(response).build();
     }
 
