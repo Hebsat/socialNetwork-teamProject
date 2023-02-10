@@ -36,7 +36,7 @@ public class SearchPosts {
     public Page<Post> findPosts(FindPostRq postRq, int offset, int perPage) {
         List<Person> personsWhoBLockedMe = getPersonsWhoBlockedMe();
         Pageable pageable = PageRequest.of(offset, perPage);
-        Specification<Post> specification = textLike(postRq.getText());
+        Specification<Post> specification = textLike(postRq.getText()).and(isBlockedFalse());
         if (personsWhoBLockedMe.size() != 0) {
             specification = specification.and(excludeBlockedPosts(personsWhoBLockedMe));
         }

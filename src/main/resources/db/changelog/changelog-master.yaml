@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/liquibase-outputChangeLog_2.yaml
   - include:
       file: db/changelog/liquibase-outputChangeLog_3.yaml
+  - include:
+      file: db/changelog/liquibase-outputChangeLog_4.yaml

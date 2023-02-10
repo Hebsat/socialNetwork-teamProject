@@ -16,9 +16,9 @@ import java.util.List;
 @Repository
 public interface PostsRepository extends JpaRepository<Post, Long>, JpaSpecificationExecutor<Post> {
 
-    Page<Post> findPostsByAuthorOrderByTimeDesc(Pageable pageable, Person author);
+    Page<Post> findPostsByAuthorAndIsBlockedFalseOrderByTimeDesc(Pageable pageable, Person author);
 
-    Page<Post> findPostsByTimeBeforeAndIsDeletedFalseOrderByTimeDesc(Pageable pageable, LocalDateTime time);
+    Page<Post> findPostsByTimeBeforeAndIsDeletedFalseAndIsBlockedFalseOrderByTimeDesc(Pageable pageable, LocalDateTime time);
 
     @Query(value = "SELECT * FROM posts WHERE author_id = :id", nativeQuery = true)
     List<Post> findPostsToDelete(@Param("id") long id);
