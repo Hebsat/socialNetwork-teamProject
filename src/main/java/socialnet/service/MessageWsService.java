@@ -1,6 +1,7 @@
 package socialnet.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import socialnet.api.websocket.MessageCommonWs;
@@ -15,6 +16,7 @@ import socialnet.repository.MessagesRepository;
 
 import java.util.Comparator;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MessageWsService {
@@ -83,7 +85,8 @@ public class MessageWsService {
     public void closeDialog(MessageCommonWs messageCommonWs) throws Exception {
         Dialog dialog = getDialog(messageCommonWs);
         if (dialog.getLastMessage() == null) {
-            dialogsRepository.delete(dialog);
+            dialog.setIsDeleted(true);
+            dialogsRepository.save(dialog);
         }
     }
 
@@ -98,7 +101,7 @@ public class MessageWsService {
                 .max(Comparator.comparing(Message::getTime)).orElse(null);
     }
 
-    private Dialog getDialog(MessageCommonWs messages) throws Exception {
-        return dialogsRepository.findById(messages.getDialogId()).orElseThrow(new NotFoundException("Dialog not found!"));
+    private Dialog getDialog(MessageCommonWs messageCommonWs) throws Exception {
+        return dialogsRepository.findById(messageCommonWs.getDialogId()).orElseThrow(new NotFoundException("Dialog not found!"));
     }
 }

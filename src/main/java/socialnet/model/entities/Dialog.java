@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,9 +34,16 @@ public class Dialog {
     @JoinColumn(name = "second_person_id", nullable = false)
     private Person secondPerson;
 
-    public Dialog(Person firstPerson, Person secondPerson, ZonedDateTime lastActiveTime) {
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isDeleted;
+
+    @OneToMany(mappedBy = "dialog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> messages;
+
+    public Dialog(Person firstPerson, Person secondPerson, ZonedDateTime lastActiveTime, Boolean isDeleted) {
         this.firstPerson = firstPerson;
         this.secondPerson = secondPerson;
         this.lastActiveTime = lastActiveTime;
+        this.isDeleted = isDeleted;
     }
 }
