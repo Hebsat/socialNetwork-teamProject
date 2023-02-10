@@ -13,6 +13,8 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://194.87.244.66:5432/social
+    validation-query: SELECT 1
+    test-on-borrow: true
     username: admin
     password: secret
     initialization-mode: never

@@ -78,3 +78,12 @@ databaseChangeLog:
         columnNames: entity_id, person_id
         constraintName: entity_person_index
         tableName: notifications
+- changeSet:
+      id: sprint-5-10
+      author: DiM
+      changes:
+        - addColumn:
+            tableName: dialogs
+            column:
+                name: is_deleted
+                type: BOOLEAN
