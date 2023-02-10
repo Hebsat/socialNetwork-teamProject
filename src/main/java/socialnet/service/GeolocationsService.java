@@ -86,7 +86,8 @@ public class GeolocationsService {
     }
 
     public CommonRs<List<GeolocationRs>> getCitiesByCountryFromUsers(String countryName) throws Exception {
-        List<String> citiesNames = personsRepository.getCitiesByCountry(countryName);
+        List<String> citiesNames = personsRepository.getCitiesByCountry(countryName)
+                .stream().filter(Objects::nonNull).collect(Collectors.toList());
         Country country = countriesRepository.findCountryByName(countryName)
                 .orElseThrow(new NotFoundException("Country with " + countryName + " name was not found"));
         List<City> cities = new ArrayList<>();
