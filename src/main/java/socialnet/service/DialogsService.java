@@ -56,15 +56,14 @@ public class DialogsService {
     public CommonRs<ComplexRs> beginDialog(DialogUserShortListDto dialogUserShortListDto) throws Exception {
         Person currentPerson = personCacheService.getPersonByContext();
         Person anotherPerson = personsRepository.findPersonById(dialogUserShortListDto.getUserIds().get(0)).orElseThrow(new NotFoundException("Not such Person!"));
-        if (dialogsRepository.findDialogByFirstPersonAndSecondPerson(anotherPerson, currentPerson).isEmpty() ||
-                (dialogsRepository.findDialogByFirstPersonAndSecondPerson(currentPerson, anotherPerson).isEmpty())) {
-            createNewDialog(currentPerson, anotherPerson);
+        Dialog dialog = dialogsRepository.findDialogByFirstPersonAndSecondPerson(currentPerson, anotherPerson)
+                .orElse(dialogsRepository.findDialogByFirstPersonAndSecondPerson(anotherPerson, currentPerson)
+                        .orElse(new Dialog(currentPerson, anotherPerson, ZonedDateTime.now(), false)));
+        if (dialog.getIsDeleted().equals(true)) {
+            dialog.setIsDeleted(false);
         }
-        return new CommonRs<>(new ComplexRs(dialogsRepository.countAllByFirstPersonOrSecondPerson(currentPerson, currentPerson)));
-    }
-
-    private void createNewDialog(Person currentPerson, Person anotherPerson) {
-        dialogsRepository.save(new Dialog(currentPerson, anotherPerson, ZonedDateTime.now()));
+        dialogsRepository.save(dialog);
+        return new CommonRs<>(new ComplexRs(dialogsRepository.countAllByFirstPersonAndIsDeletedFalseOrSecondPersonAndIsDeletedFalse(currentPerson, currentPerson)));
     }
 
     public CommonRs<List<DialogRs>> getAllDialogs() throws Exception {
@@ -86,7 +85,7 @@ public class DialogsService {
 
     private List<DialogRs> createDialogRsList(Person person) throws Exception {
         List<DialogRs> dialogRsList = new ArrayList<>();
-        for (Dialog d : dialogsRepository.findAllByFirstPersonOrSecondPerson(person, person)) {
+        for (Dialog d : dialogsRepository.findAllByFirstPersonAndIsDeletedFalseOrSecondPersonAndIsDeletedFalse(person, person)) {
             checkLastMessageRs(d);
             Message message = d.getLastMessage();
             message.setRecipient(getRecipientForLastMessage(message));

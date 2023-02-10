@@ -19,7 +19,7 @@ public interface DialogsRepository extends JpaRepository<Dialog, Long> {
             nativeQuery = true)
     void dialogsDelete(@Param("id") long id);
     Optional<Dialog> findDialogByFirstPersonAndSecondPerson(Person first, Person second);
-    List<Dialog> findAllByFirstPersonOrSecondPerson(Person firstPerson, Person secondPerson);
-    Long countAllByFirstPersonOrSecondPerson(Person first, Person second);
-    Long countAllByFirstPersonIdOrSecondPersonId(long firstPerson, long secondPerson);
+    List<Dialog> findAllByFirstPersonAndIsDeletedFalseOrSecondPersonAndIsDeletedFalse(Person firstPerson, Person secondPerson);
+    Long countAllByFirstPersonAndIsDeletedFalseOrSecondPersonAndIsDeletedFalse(Person first, Person second);
+    Long countAllByFirstPersonIdAndIsDeletedFalseOrSecondPersonIdAndIsDeletedFalse(long firstPerson, long secondPerson);
 }

@@ -136,7 +136,7 @@ class PostsServiceTest {
     @Test
     void getFeeds() {
         when(personsRepository.findPersonByEmail(any())).thenReturn(Optional.of(person));
-        when(postsRepository.findPostsByTimeBeforeAndIsDeletedFalseOrderByTimeDesc(any(), any())).thenReturn(new PageImpl<>(List.of(post)));
+        when(postsRepository.findPostsByTimeBeforeAndIsDeletedFalseAndIsBlockedFalseOrderByTimeDesc(any(), any())).thenReturn(new PageImpl<>(List.of(post)));
         when(tagsService.tagsToStringsMapper(any())).thenReturn(new ArrayList<>());
         when(tagsService.stringsToTagsMapper(any())).thenReturn(new ArrayList<>());
         when(likesService.getLikesCount(any())).thenReturn(0);
@@ -149,7 +149,7 @@ class PostsServiceTest {
 
     @Test
     void getAllPostsByAuthor() {
-        when(postsRepository.findPostsByAuthorOrderByTimeDesc(any(), any())).thenReturn(new PageImpl<>(List.of(post)));
+        when(postsRepository.findPostsByAuthorAndIsBlockedFalseOrderByTimeDesc(any(), any())).thenReturn(new PageImpl<>(List.of(post)));
         when(tagsService.tagsToStringsMapper(any())).thenReturn(new ArrayList<>());
         when(tagsService.stringsToTagsMapper(any())).thenReturn(new ArrayList<>());
         when(likesService.getLikesCount(any())).thenReturn(0);

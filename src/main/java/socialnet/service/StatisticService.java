@@ -68,7 +68,7 @@ public class StatisticService {
         if (userId == null) {
             throw new EmptyFieldException("param 'userId' is empty");
         }
-        return dialogsRepository.countAllByFirstPersonIdOrSecondPersonId(userId, userId);
+        return dialogsRepository.countAllByFirstPersonIdAndIsDeletedFalseOrSecondPersonIdAndIsDeletedFalse(userId, userId);
     }
 
     public Long getCountLikes() {
