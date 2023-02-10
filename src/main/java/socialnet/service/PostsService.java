@@ -71,7 +71,7 @@ public class PostsService {
         if (!postsWithBlockedPosts.isEmpty()) {
             postPage = postsWithBlockedPosts;
         } else {
-            postPage = postsRepository.findPostsByTimeBeforeAndIsDeletedFalseOrderByTimeDesc(pageable, LocalDateTime.now(ZoneId.of(timezone)));
+            postPage = postsRepository.findPostsByTimeBeforeAndIsDeletedFalseAndIsBlockedFalseOrderByTimeDesc(pageable, LocalDateTime.now(ZoneId.of(timezone)));
         }
         return buildCommonResponse(offset, size, postPage.getContent(), postPage.getTotalElements());
     }
@@ -81,7 +81,7 @@ public class PostsService {
             return buildCommonResponse(offset, size, new ArrayList<>(), 0L);
         }
         Pageable pageable = NetworkPageRequest.of(offset, size);
-        Page<Post> postPage= postsRepository.findPostsByAuthorOrderByTimeDesc(pageable, postsAuthor);
+        Page<Post> postPage = postsRepository.findPostsByAuthorAndIsBlockedFalseOrderByTimeDesc(pageable, postsAuthor);
         return buildCommonResponse(offset, size, postPage.getContent(), postPage.getTotalElements());
     }
 

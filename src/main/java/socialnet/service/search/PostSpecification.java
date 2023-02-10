@@ -12,6 +12,10 @@ import java.util.List;
 
 public class PostSpecification {
 
+    public static Specification<Post> isBlockedFalse() {
+        return (root, query, cb) -> cb.equal(root.get("isBlocked"), false);
+    }
+
     public static Specification<Post> textLike(String text) {
         return (root, query, cb) ->
                 cb.like(cb.lower(root.get("postText")), "%" + text.toLowerCase() + "%");
