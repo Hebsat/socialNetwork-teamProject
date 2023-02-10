@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.map.LinkedMap;
 import socialnet.api.request.EmailRq;
 import socialnet.api.request.PasswordRq;
 import socialnet.api.request.PasswordSetRq;
@@ -23,6 +24,9 @@ import socialnet.service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @RestController
@@ -77,7 +81,8 @@ public class AccountController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "403", description = "Forbidden")
     })
-    public ResponseEntity<RegisterRs> passwordRecovery(@RequestBody String email){
+    public ResponseEntity<RegisterRs> passwordRecovery(@RequestBody LinkedHashMap mapemail) throws MessagingException {
+        String email= (String) mapemail.get("email");
         return ResponseEntity.ok(accountService.getPasswordRecovery(email));}
 
     @PutMapping("/email")
@@ -102,7 +107,7 @@ public class AccountController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "403", description = "Forbidden")
     })
-    public ResponseEntity<RegisterRs> emailRecovery(String email) {
+    public ResponseEntity<RegisterRs> emailRecovery(String email) throws MessagingException {
         return ResponseEntity.ok(accountService.getEmailRecovery());}
 
     @UpdateOnlineTime

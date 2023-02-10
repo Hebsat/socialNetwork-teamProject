@@ -23,6 +23,7 @@ import socialnet.service.AccountService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -78,7 +79,7 @@ public class AccountControllerV2 {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "403", description = "Forbidden")
     })
-    public ResponseEntity<RegisterRs> passwordRecovery(@RequestBody LinkedHashMap email){
+    public ResponseEntity<RegisterRs> passwordRecovery(@RequestBody LinkedHashMap email) throws MessagingException {
         return ResponseEntity.ok(accountService.getPasswordRecovery(email.get("email").toString()));}
 
     @PutMapping("/email")
@@ -103,7 +104,7 @@ public class AccountControllerV2 {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "403", description = "Forbidden")
     })
-    public ResponseEntity<RegisterRs> emailRecovery() {
+    public ResponseEntity<RegisterRs> emailRecovery() throws MessagingException {
         return ResponseEntity.ok(accountService.getEmailRecovery());}
 
     @UpdateOnlineTime

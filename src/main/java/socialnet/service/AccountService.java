@@ -23,6 +23,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -118,7 +120,7 @@ public class AccountService {
         return response;
     }
 
-    public RegisterRs getPasswordRecovery(String email) {
+    public RegisterRs getPasswordRecovery(String email) throws MessagingException {
         RegisterRs response = new RegisterRs();
         ComplexRs data = getComplexRs();
         response.setEmail(email);
@@ -141,7 +143,7 @@ public class AccountService {
         return new ComplexRs(0, 0L, "OK", 0L);
     }
 
-    public RegisterRs getEmailRecovery() {
+    public RegisterRs getEmailRecovery() throws MessagingException {
         Person person = personCacheService.getPersonByEmail(SecurityContextHolder
                 .getContext().getAuthentication().getName());
         RegisterRs response = new RegisterRs();

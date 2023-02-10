@@ -44,7 +44,7 @@ spring:
     cache-names: cache-person
     redis:
       cache-null-values: true
-      time-to-live: 60000
+      time-to-live: 180000
   kafka:
     bootstrap-servers: 194.87.244.66:9092
     producer:
