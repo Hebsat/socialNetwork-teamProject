@@ -21,11 +21,11 @@ auth:
 
 logging:
   level:
-    root: INFO
+    root: WARN
   file:
     max-history: 1
     path: log
     uploadLogs: false
 
 user:
-  time-to-delete: 15000
+  time-to-delete: 10000

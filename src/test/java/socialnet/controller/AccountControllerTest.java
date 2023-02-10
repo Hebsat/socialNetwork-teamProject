@@ -87,14 +87,15 @@ class AccountControllerTest {
 
     @Test
     void testGetPasswordChange() throws Exception{
-        String email = "testbd@internet.ru";
+        LinkedHashMap<String,String> email = new LinkedHashMap<>();
+        email.put("email","testbd@internet.ru");
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(email);
-//        mockMvc.perform(put("/api/v1/account/password/recovery").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-//                .andDo(print())
-//                .andExpect(status().is2xxSuccessful());
+        mockMvc.perform(put("/api/v1/account/password/recovery").contentType(MediaType.APPLICATION_JSON).content(requestJson))
+                .andDo(print())
+                .andExpect(status().is2xxSuccessful());
     }
 
     @Test
