@@ -10,7 +10,6 @@ import socialnet.model.entities.Dialog;
 import socialnet.model.entities.Message;
 import socialnet.repository.DialogsRepository;
 import socialnet.repository.MessagesRepository;
-import socialnet.repository.PersonsRepository;
 
 @Slf4j
 @Service

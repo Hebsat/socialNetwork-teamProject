@@ -18,8 +18,6 @@ public interface FriendshipsRepository extends JpaRepository<Friendship, Long> {
 
     List<Friendship> findFriendshipBySrcPerson(Person srcPerson);
 
-    List<Friendship> findFriendshipById(Long id);
-
     @Query(value = "SELECT * FROM friendships WHERE (dst_person_id = :id OR src_person_id = :id)",
             nativeQuery = true)
     List<Friendship> findFriendsToDelete(@Param("id") long id);

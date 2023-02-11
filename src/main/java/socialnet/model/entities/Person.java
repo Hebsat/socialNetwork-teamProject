@@ -90,12 +90,14 @@ public class Person implements Notificationed, Serializable {
     private LocalDateTime deletedTime;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "friendships", joinColumns = @JoinColumn(name = "src_person_id"), inverseJoinColumns = @JoinColumn(name = "dst_person_id"))
+    @JoinTable(name = "friendships",
+            joinColumns = @JoinColumn(name = "src_person_id"),inverseJoinColumns = @JoinColumn(name = "dst_person_id"))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Person> srcFriendships = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "friendships", joinColumns = @JoinColumn(name = "dst_person_id"), inverseJoinColumns = @JoinColumn(name = "src_person_id"))
+    @JoinTable(name = "friendships",
+            joinColumns = @JoinColumn(name = "dst_person_id"), inverseJoinColumns = @JoinColumn(name = "src_person_id"))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Person> dstFriendships = new ArrayList<>();
 
@@ -174,6 +176,5 @@ public class Person implements Notificationed, Serializable {
 
     public Person(Long id) {
         this.id = id;
-        this.email = email;
     }
 }

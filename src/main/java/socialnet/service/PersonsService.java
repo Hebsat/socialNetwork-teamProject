@@ -1,6 +1,8 @@
 package socialnet.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 import socialnet.api.response.CommonRs;
 import socialnet.api.response.PersonRs;
 import socialnet.mappers.PersonMapper;
@@ -8,9 +10,6 @@ import socialnet.model.entities.Friendship;
 import socialnet.model.entities.Person;
 import socialnet.model.enums.FriendshipStatusTypes;
 import socialnet.repository.FriendshipsRepository;
-import socialnet.repository.PersonsRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +19,6 @@ import java.util.List;
 public class PersonsService {
 
     private final FriendshipsRepository friendshipsRepository;
-
-    private final PersonsRepository personsRepository;
     private final PersonMapper personMapper;
     private final FriendsService friendsService;
     private final PersonCacheService personCacheService;

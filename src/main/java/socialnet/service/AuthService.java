@@ -12,14 +12,12 @@ import socialnet.errors.PasswordException;
 import socialnet.errors.WrongEmailException;
 import socialnet.mappers.PersonMapper;
 import socialnet.model.entities.Person;
-import socialnet.repository.PersonsRepository;
 import socialnet.security.jwt.JWTUtil;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final PersonsRepository personsRepository;
     private final PersonCacheService personCacheService;
     private final PasswordEncoder passwordEncoder;
     private final PersonMapper personMapper;

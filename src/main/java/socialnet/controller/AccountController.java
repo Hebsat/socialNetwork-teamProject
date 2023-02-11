@@ -8,24 +8,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.map.LinkedMap;
-import socialnet.api.request.EmailRq;
-import socialnet.api.request.PasswordRq;
-import socialnet.api.request.PasswordSetRq;
-import socialnet.api.request.RegisterRq;
-import socialnet.api.response.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import socialnet.aop.annotations.UpdateOnlineTime;
 import socialnet.api.request.*;
+import socialnet.api.response.*;
 import socialnet.errors.CaptchaException;
 import socialnet.errors.IncorrectRequestTypeException;
 import socialnet.errors.PasswordException;
 import socialnet.errors.PersonNotFoundException;
 import socialnet.service.AccountService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 import java.util.LinkedHashMap;
 import java.util.List;
 

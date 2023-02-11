@@ -50,7 +50,6 @@ public class PersonSettings implements Serializable {
                 ", friendBirthdayNotification=" + friendBirthdayNotification +
                 ", likeNotification=" + likeNotification +
                 ", postNotification=" + postNotification +
-//                ", personId=" + person.getId() +
                 '}';
     }
 }

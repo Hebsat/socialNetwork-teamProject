@@ -23,7 +23,6 @@ public class PersonCacheService {
         return getPersonByEmail(personsRepository.findPersonById(personId).get().getEmail());
     }
 
-   // @CachePut(value = "persons")
     @Cacheable(value="persons")
     public Person getPersonByEmail(String email) {
         return personsRepository.findPersonByEmail(email).orElse(null);

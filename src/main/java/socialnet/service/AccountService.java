@@ -1,6 +1,10 @@
 package socialnet.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import socialnet.api.request.*;
 import socialnet.api.response.CommonRs;
 import socialnet.api.response.ComplexRs;
@@ -18,13 +22,8 @@ import socialnet.model.enums.NotificationTypes;
 import socialnet.repository.CaptchaRepository;
 import socialnet.repository.PersonSettingsRepository;
 import socialnet.repository.PersonsRepository;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -80,7 +79,6 @@ public class AccountService {
         person.setMessagePermission(MessagePermissionTypes.ALL);
         person.setPersonSettings(createDefaultNotificationsSettings());
         personCacheService.cachePerson(person);
-//        personsRepository.save(person);
         return registerRs;
     }
 

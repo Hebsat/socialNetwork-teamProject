@@ -2,8 +2,8 @@ package socialnet.service;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import socialnet.api.request.FindPersonRq;
 import socialnet.api.request.UserRq;
-import socialnet.api.response.*;
+import socialnet.api.response.CommonRs;
+import socialnet.api.response.ComplexRs;
+import socialnet.api.response.PersonRs;
+import socialnet.api.response.StorageDataRs;
 import socialnet.errors.EmptyFieldException;
 import socialnet.errors.FileException;
 import socialnet.mappers.PersonMapper;
-import socialnet.model.entities.City;
 import socialnet.model.entities.Person;
 import socialnet.repository.*;
 import socialnet.service.search.SearchPersons;
@@ -49,7 +51,6 @@ public class UsersService {
     private final PostsRepository postsRepository;
     private final PersonsRepository personsRepository;
     private final PersonSettingsRepository personSettingsRepository;
-    private final CountriesRepository countriesRepository;
     private final CloudinaryService cloudinaryService;
     private final GeolocationsService geolocationsService;
     private final PersonMapper personMapper;
@@ -204,7 +205,6 @@ public class UsersService {
             messagesRepository.messagesDelete(oldId);
             likesRepository.likeDelete(oldId);
             personsRepository.personDelete(oldId);
-      //      personsRepository.deleteAll(personsRepository.findOldDeletes(timeToDel));
         }
     }
 

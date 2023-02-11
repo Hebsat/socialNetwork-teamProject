@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface CitiesRepository extends JpaRepository<City, Long> {
-    boolean existsCityByName(String name);
 
     @Query("SELECT DISTINCT gismeteoId FROM City")
     List<Integer> findGismeteoIds();
