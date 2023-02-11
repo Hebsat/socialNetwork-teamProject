@@ -121,7 +121,6 @@ public class GeolocationsService {
                 JSONObject jsonCity = jsonArray.getJSONObject(i);
                 if (jsonCity.getString("country").equals(country.getCodeTwoSymbols())) {
                     List<String> cityFields = getCityFields(jsonCity.getString("full_name"));
-                    cityFields.forEach(System.out::println);
                     City city = citiesRepository.findCityByNameAndDistrictAndSubDistrict(cityFields.get(0), cityFields.get(1), cityFields.get(2)).orElse(null);
                     if (city == null) {
                         city = citiesRepository.save(City.builder()
