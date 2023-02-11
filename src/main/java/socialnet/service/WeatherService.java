@@ -3,6 +3,7 @@ package socialnet.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.cloudinary.json.JSONArray;
+import org.cloudinary.json.JSONException;
 import socialnet.api.response.WeatherRs;
 import socialnet.model.entities.Weather;
 import socialnet.model.entities.City;
@@ -46,8 +47,8 @@ public class WeatherService {
             URLConnection connection = new URL(cityIdPath + city.getName()).openConnection();
             connection.addRequestProperty(header, token);
             String jsonData = new String(connection.getInputStream().readAllBytes());
-            JSONArray citiesItems = new JSONObject(jsonData).getJSONObject("response").getJSONArray("items");
             log.info("Got JSON from GisMeteo API: " + jsonData);
+            JSONArray citiesItems = new JSONObject(jsonData).getJSONObject("response").getJSONArray("items");
             for (int i = 0; i < citiesItems.length(); i++) {
                 JSONObject currentCity = citiesItems.getJSONObject(i);
                 if (!currentCity.getJSONObject("country").getString("code")
@@ -61,7 +62,7 @@ public class WeatherService {
                 }
                 cityId = currentCity.getInt("id");
             }
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             log.error("Error getting GismeteoId: " + e.getMessage());
         }
         return cityId;
