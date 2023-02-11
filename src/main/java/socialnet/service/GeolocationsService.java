@@ -112,7 +112,7 @@ public class GeolocationsService {
         Country country = countriesRepository.findCountryByName(countryName)
                 .orElseThrow(new NotFoundException("Country with " + countryName + " name was not found"));
         List<GeolocationRs> response = new ArrayList<>();
-        try (InputStream stream = new URL(citiesPath1 + startsWith + citiesPath2 + token).openStream()) {
+        try (InputStream stream = new URL(citiesPath1 + country.getName() + "&q=" + startsWith + citiesPath2 + token).openStream()) {
             String jsonData = new String(stream.readAllBytes());
             log.info("Got cities from API: " + jsonData);
             Set<String> jsonSet = new JSONObject(jsonData).keySet();

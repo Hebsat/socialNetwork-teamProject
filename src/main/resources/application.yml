@@ -86,7 +86,7 @@ socialNetwork:
   geolocation:
     countries-path: https://htmlweb.ru/geo/api.php?location&json&api_key=
     cities-path:
-      main: http://htmlweb.ru/geo/api.php?city_name=
+      main: https://htmlweb.ru/api.php?obj=geo&m=city_list&json&country=
       params: "&json&api_key="
     first-countries-in-response: Россия, Беларусь
     first-cities-in-response: Москва (Московская область, Центральный федеральный округ); Санкт-Петербург (Ленинградская область, Санкт-Петербург)
