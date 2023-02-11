@@ -2,6 +2,7 @@ package socialnet.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.cloudinary.json.JSONArray;
 import org.cloudinary.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -115,15 +116,12 @@ public class GeolocationsService {
         try (InputStream stream = new URL(citiesPath1 + country.getName() + "&q=" + startsWith + citiesPath2 + token).openStream()) {
             String jsonData = new String(stream.readAllBytes());
             log.info("Got cities from API: " + jsonData);
-            Set<String> jsonSet = new JSONObject(jsonData).keySet();
-            jsonSet.forEach(key -> {
-                if (key.matches("\\D+")){
-                    log.info(key + " - " + new JSONObject(jsonData).get(key));
-                    return;
-                }
-                JSONObject cityData = new JSONObject(jsonData).getJSONObject(key);
-                if (cityData.getString("country").equals(country.getCodeTwoSymbols())) {
-                    List<String> cityFields = getCityFields(cityData.getString("full_name"));
+            JSONArray jsonArray = new JSONObject(jsonData).getJSONArray("items");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonCity = jsonArray.getJSONObject(i);
+                if (jsonCity.getString("country").equals(country.getCodeTwoSymbols())) {
+                    List<String> cityFields = getCityFields(jsonCity.getString("full_name"));
+                    cityFields.forEach(System.out::println);
                     City city = citiesRepository.findCityByNameAndDistrictAndSubDistrict(cityFields.get(0), cityFields.get(1), cityFields.get(2)).orElse(null);
                     if (city == null) {
                         city = citiesRepository.save(City.builder()
@@ -137,7 +135,7 @@ public class GeolocationsService {
                             .title(getCityFullName(city))
                             .build());
                 }
-            });
+            }
         } catch (IOException e) {
             log.error(e.getMessage());
         }
