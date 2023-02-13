@@ -12,11 +12,11 @@ spring:
     show-sql: false
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://194.87.244.66:5432/social
+    url: jdbc:postgresql://xxxxxxxxxxxxxxxxxxxx
     validation-query: SELECT 1
     test-on-borrow: true
-    username: admin
-    password: secret
+    username: xxxx
+    password: xxxx
     initialization-mode: never
     data: classpath:/db/changelog/data.sql
   liquibase:
@@ -26,8 +26,8 @@ spring:
     protocol: smtps
     host: smtp.mail.ru
     port: 465
-    username: testbd@internet.ru
-    password: hvYDUwgKj6fkDkFCkgSN
+    username: xxxxxxxxxxxxxxxxx
+    password: xxxxxxxxxxxxxxxxx
     properties:
       mail:
         smtp:
@@ -36,7 +36,7 @@ spring:
             enable: true
   redis:
     port: 6379
-    host: 194.87.244.66
+    host: xxxxxxxxxxx
     database: 0
     password: 000000
   cache:
@@ -46,7 +46,7 @@ spring:
       cache-null-values: true
       time-to-live: 180000
   kafka:
-    bootstrap-servers: 194.87.244.66:9092
+    bootstrap-servers: xxxxxxxxxxxxxxxxxx
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -81,7 +81,7 @@ socialNetwork:
     city-id-path: https://api.gismeteo.net/v2/search/cities/?query=
     token:
       header: X-Gismeteo-Token
-      value: 63623dcd39d633.86405201
+      value: xxxxxxxxxxxxxxxxxxxxxxxxx
   #cities and countries
   geolocation:
     countries-path: https://htmlweb.ru/geo/api.php?location&json&api_key=
@@ -91,13 +91,13 @@ socialNetwork:
     first-countries-in-response: Россия, Беларусь
     first-cities-in-response: Москва (Московская область, Центральный федеральный округ); Санкт-Петербург (Ленинградская область, Санкт-Петербург)
     # 20 запросов в сутки
-    token: aae8395d07c1255b0ca5ab1962268afd
+    token: xxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 auth:
   secret: someSecretCode
   time-to-live: 36000000
-  pass-restore: http://194.87.244.66:8080/change-password?token=
-  email-restore: http://194.87.244.66:8080/shift-email?token=
+  pass-restore: http://xxxxxxxxxxxxxxxxxx/change-password?token=
+  email-restore: http://xxxxxxxxxxxxxxxxx/shift-email?token=
 
 logging:
   file:
@@ -107,7 +107,7 @@ logging:
     uploadTime: 0 0 4 * * *
 
 yandex:
-  OAuth: y0_AgAAAABmXrQEAAixEgAAAADUt4an1A5J737iQj-h8tddar39fPxBIgQ
+  OAuth: xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 user:
   time-to-delete: 2592000000
