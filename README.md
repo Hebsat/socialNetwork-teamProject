@@ -10,6 +10,7 @@
 > - Websockets
 > - Apache Kafka
 > - Redis<br>
+> 
 > Вспомогательные инструменты: 
 > - jwt
 > - lombok
@@ -17,6 +18,7 @@
 > - zonky-test (embedded database)
 > - liquibase
 > - SpringBoot AOP <br>
+> 
 > К данной социальной сети написан телеграм бот https://github.com/Hebsat/social-telegram-bot
 
 
