@@ -9,14 +9,15 @@
 > - PostgreSQL
 > - Websockets
 > - Apache Kafka
-> - Redis
+> - Redis<br>
 > Вспомогательные инструменты: 
 > - jwt
 > - lombok
 > - mapstruct
 > - zonky-test (embedded database)
 > - liquibase
-> - SpringBoot AOP
+> - SpringBoot AOP <br>
+> К данной социальной сети написан телеграм бот https://github.com/Hebsat/social-telegram-bot
 
 
 
