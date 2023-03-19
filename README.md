@@ -5,7 +5,7 @@
 > Работа была организована по методологии Agile scrum.<br>
 > Стек использованных технологий: 
 > - Java + SpringBoot
-> - SpringSequrity
+> - SpringSeсurity
 > - PostgreSQL
 > - Websockets
 > - Apache Kafka
